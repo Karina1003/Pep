@@ -39,7 +39,7 @@ public class PepRepositoryCustomImpl implements PepRepositoryCustom {
     public List<PepMostPopularNameDto> getListOfPopularNamesPep(int limitOfNames) {
         MongoCollection<Document> collection = mongoTemplate.getCollection("pep");
         List<Bson> pipeline = List.of(Aggregates.match(Filters.eq("isPep", true)),
-                Aggregates.group("firstNameEn", Accumulators.sum("count", 1)),
+                Aggregates.group("$firstNameEn", Accumulators.sum("count", 1)),
                 Aggregates.sort(Sorts.descending("count")), Aggregates.limit(limitOfNames));
         List<PepMostPopularNameDto> list = new LinkedList<>();
         collection.aggregate(pipeline)
