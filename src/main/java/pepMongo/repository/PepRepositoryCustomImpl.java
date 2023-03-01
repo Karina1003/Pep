@@ -27,10 +27,14 @@ public class PepRepositoryCustomImpl implements PepRepositoryCustom {
     public List<PepData> findByNameSurname(PepQueryDto pepQueryDto) {
         Query mongoQuery = new Query();
         if (StringUtils.isNotBlank(pepQueryDto.getName())) {
-            mongoQuery.addCriteria(Criteria.where("firstNameEn").regex(pepQueryDto.getName()));
+            mongoQuery.addCriteria(new Criteria().orOperator(
+                    Criteria.where("firstNameEn").regex(pepQueryDto.getName()),
+                    Criteria.where("firstName").regex(pepQueryDto.getName())));
         }
         if (StringUtils.isNotBlank(pepQueryDto.getSurname())) {
-            mongoQuery.addCriteria(Criteria.where("lastNameEn").regex(pepQueryDto.getSurname()));
+            mongoQuery.addCriteria(new Criteria().orOperator(
+                    Criteria.where("lastNameEn").regex(pepQueryDto.getSurname()),
+                    Criteria.where("lastName").regex(pepQueryDto.getSurname())));
         }
         return mongoTemplate.find(mongoQuery, PepData.class);
     }
